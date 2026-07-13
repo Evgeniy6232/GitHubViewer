@@ -9,5 +9,6 @@ data class RepoDetails(
     val forksCount: Int,
     val watchersCount: Int,
     val license: String?,
-    val webUrl: String
+    val webUrl: String,
+    val ownerLogin: String
 )

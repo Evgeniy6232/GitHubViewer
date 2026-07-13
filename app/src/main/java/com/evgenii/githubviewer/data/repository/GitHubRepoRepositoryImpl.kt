@@ -71,6 +71,7 @@ class GitHubRepoRepositoryImpl (
         forksCount = forksCount,
         watchersCount = watchersCount,
         license = license?.name,
-        webUrl = webUrl
+        webUrl = webUrl,
+        ownerLogin = ownerLogin!!
     )
 }
