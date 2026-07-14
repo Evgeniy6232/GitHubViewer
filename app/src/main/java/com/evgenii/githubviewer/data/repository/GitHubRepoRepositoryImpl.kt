@@ -44,7 +44,11 @@ class GitHubRepoRepositoryImpl (
         repositoryName: String,
         branchName: String
     ): String {
-        return api.getRepositoryReadme(ownerName, repositoryName, branchName)
+        return try {
+            api.getRepositoryReadme(ownerName, repositoryName, branchName)
+        } catch (e: Exception) {
+            ""
+        }
     }
 
     private fun UserDto.toDomain() = UserInfo(
@@ -72,6 +76,7 @@ class GitHubRepoRepositoryImpl (
         watchersCount = watchersCount,
         license = license?.name,
         webUrl = webUrl,
-        ownerLogin = ownerLogin!!
+        ownerLogin = ownerLogin!!,
+        defaultBranch = defaultBranch
     )
 }

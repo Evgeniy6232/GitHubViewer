@@ -60,10 +60,24 @@ class GitHubApi(
     }
 
     // GET /repos/{owner}/{repo}/readme — получить README (сырой markdown)
-    suspend fun getRepositoryReadme(owner: String, repo: String, branch: String): String {
+/*    suspend fun getRepositoryReadme(owner: String, repo: String, branch: String): String {
         return httpClient.get("$baseUrl/repos/$owner/$repo/readme?ref=$branch") {
             addAuthHeader()
             header(HttpHeaders.Accept, "application/vnd.github.raw+json")
         }.body()
+    }
+
+ */
+
+    suspend fun getRepositoryReadme(owner: String, repo: String, branch: String): String {
+        val response = httpClient.get("$baseUrl/repos/$owner/$repo/readme?ref=$branch") {
+            addAuthHeader()
+            header(HttpHeaders.Accept, "application/vnd.github.raw+json")
+        }
+        return if (response.status.value in 200..299) {
+            response.body()
+        } else {
+            ""
+        }
     }
 }

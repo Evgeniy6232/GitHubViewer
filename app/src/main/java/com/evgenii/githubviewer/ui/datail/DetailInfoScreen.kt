@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
@@ -55,11 +56,17 @@ fun DetailInfoScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp)
             ) {
-                Text(
-                    text = repo.name,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = onBack) {
+                        Text("<- Back")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = repo.name,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 if (repo.description.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -71,91 +78,85 @@ fun DetailInfoScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                    StatItem("Stars", repo.starsCount.toString())
-                    StatItem("Forks", repo.forksCount.toString())
-                    StatItem("Watchers", repo.watchersCount.toString())
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                    if (repo.language != null) {
-                        InfoRow(label = "Language", value = repo.language)
-                    }
-                    if (repo.license != null) {
-                        InfoRow(label = "License", value = repo.license)
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 TextButton(
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(repo.webUrl))
                         context.startActivity(intent)
                     }
                 ) {
-                    Text("Open in browser")
+                    Text(
+                        text = " \uD83D\uDD17  github.com/${repo.ownerLogin}/${repo.name}",
+                        fontSize = 16.sp
+                        )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                if (repo.license != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "License",
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                        Text(text = repo.license)
+                    }
+                }
+
+                if (repo.language != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Language",
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                        Text(text = repo.language)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("⭐  ${repo.starsCount}")
+                    Text("Ψ ${repo.forksCount}")
+                    Text("\uD83D\uDC41  ${repo.watchersCount}")
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "README",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
                 when (val readme = currentState.readmeState) {
                     is RepositoryInfoViewModel.ReadmeState.Loading -> {
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
                     }
+
                     is RepositoryInfoViewModel.ReadmeState.Empty -> {
-                        Text("No README found")
                     }
+
                     is RepositoryInfoViewModel.ReadmeState.Error -> {
                         Text(
                             text = readme.error,
                             color = MaterialTheme.colorScheme.error
                         )
                     }
+
                     is RepositoryInfoViewModel.ReadmeState.Loaded -> {
-                        Text(text = readme.markdown)
+                        Text(
+                            text = readme.markdown,
+                            fontSize = 20.sp
+                        )
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun StatItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-        )
-    }
-}
-
-@Composable
-private fun InfoRow(label: String, value: String) {
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-        )
-        Text(text = value)
     }
 }

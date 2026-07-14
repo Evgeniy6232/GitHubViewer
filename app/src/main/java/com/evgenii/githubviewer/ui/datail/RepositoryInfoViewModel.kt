@@ -64,7 +64,7 @@ class RepositoryInfoViewModel(
             val current = _state.value as? State.Loaded ?: return@launch
             _state.value = current.copy(readmeState = ReadmeState.Loading)
 
-            val defaultBranch = "main"
+            val defaultBranch = repo.defaultBranch
 
             getRepositoryReadmeUseCase(
                 ownerName = repo.ownerLogin,
@@ -84,9 +84,7 @@ class RepositoryInfoViewModel(
                 .onFailure { error ->
                     val updated = (_state.value as? State.Loaded) ?: return@launch
                     _state.value = updated.copy(
-                        readmeState = ReadmeState.Error(
-                            error.message ?: "Error loading README"
-                        )
+                        readmeState = ReadmeState.Empty
                     )
                 }
         }

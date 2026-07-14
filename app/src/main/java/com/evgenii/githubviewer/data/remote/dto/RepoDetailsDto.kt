@@ -17,7 +17,10 @@ data class RepoDetailsDto(
     val watchersCount: Int,
     val license: LicenseDto?,
     @SerialName("html_url")
-    val webUrl: String
+    val webUrl: String,
+    @SerialName("default_branch")
+    val defaultBranch: String
+
 )
 
 @Serializable

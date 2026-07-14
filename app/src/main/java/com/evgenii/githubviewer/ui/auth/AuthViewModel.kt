@@ -48,8 +48,7 @@ class AuthViewModel (
                     _actions.emit(Action.RouteToMain)
                 }
                 .onFailure { error ->
-                    _state.value = State.AwaitingInput
-                    _actions.emit(Action.ShowError(error.message ?: "Login error"))
+                    _state.value = State.InvalidInput("Invalid token")
                 }
         }
     }

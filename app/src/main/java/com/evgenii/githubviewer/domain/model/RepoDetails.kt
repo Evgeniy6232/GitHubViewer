@@ -10,5 +10,6 @@ data class RepoDetails(
     val watchersCount: Int,
     val license: String?,
     val webUrl: String,
-    val ownerLogin: String
+    val ownerLogin: String,
+    val defaultBranch: String
 )
